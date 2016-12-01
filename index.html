@@ -1,7 +1,7 @@
 <html>
   <head>
-    <link rel="stylesheet" href="/css/main.css">
-    <script src="ffmpeg.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="./ffmpeg.js"></script>
     <script>
       const ffmpeg = new ffmpegEncoder();
       let fileInput;
@@ -16,7 +16,7 @@
         });
       };
 
-      const backgroundImageRequest = fetch('/assets/n6-background.mp4');
+      const backgroundImageRequest = fetch('./assets/n6-background.mp4');
 
       const start = function(file) {
         ffmpeg.ready.then(function() {

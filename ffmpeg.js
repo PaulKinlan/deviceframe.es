@@ -1,7 +1,7 @@
 let ffmpegEncoder = function(encoderArgs, files) {
   let stdout = "";
   let stderr = "";
-  let worker = new Worker("/ffmpeg-worker-mp4.js");
+  let worker = new Worker("./ffmpeg-worker-mp4.js");
 
   let globalResolve;
   let videoResolve;
