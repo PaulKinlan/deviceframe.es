@@ -69,6 +69,10 @@
           e.preventDefault(); // Necessary. Allows us to drop.
         }
 
+        if(e.dataTransfer.items[0].type.indexOf('video/') != 0) {
+          return false;
+        }
+
         e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
         return false;
@@ -79,6 +83,10 @@
       ondrop = function(e) {
         if (e.stopPropagation) {
           e.stopPropagation(); // stops the browser from redirecting.
+        }
+
+        if(e.dataTransfer.items[0].type.indexOf('video/') != 0) {
+          return false;
         }
 
         start(e.dataTransfer.files[0]);

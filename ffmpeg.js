@@ -15,13 +15,6 @@ let ffmpegEncoder = function(encoderArgs, files) {
   });
 
   this.run = function(files) {
-    /*
-    -i $n6_frame
-    -i $shot_path
-    -filter_complex "[1:v]scale=480:-1[scaled_overlay],[0:v][scaled_overlay]overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2"
-    $shot_path-frame.mp4
-   */
-
     let args = ['-y']
               .concat((encoderArgs || []))
               .concat([
