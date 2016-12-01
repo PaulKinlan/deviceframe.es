@@ -37,8 +37,12 @@
         });
       }
 
-
       onload = function() {
+
+        ffmpeg.ready.then(function() {
+          document.body.classList.remove('loading');
+        });
+
         fileInput = document.getElementById("videoFile");
         fileInput.onchange = function(e) {
           start(e.target.files[0]);
@@ -115,7 +119,8 @@
     </script>
   </head>
 
-  <body draggable>
+  <body draggable class="loading">
+    <p id="loading">Loading the system... wait one moment</p>
     <label for="videoFile">Select or drop a video file</label>
     <input type="file" name="videoFile" id="videoFile" accept="video/*">
 

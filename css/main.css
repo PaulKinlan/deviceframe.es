@@ -28,6 +28,22 @@ body.badfile {
  background-image: radial-gradient(circle at 50% 20%, #fd7a70 0%, #e20909 100%);
 }
 
+body.loading #loading {
+  display: block;
+}
+
+body #loading {
+  display: none;
+}
+
+body.loading input[type=file] {
+  display: none;
+}
+
+body.loading label {
+  display: none;
+}
+
 input[type=file] {
   width: 0.1px;
 	height: 0.1px;
