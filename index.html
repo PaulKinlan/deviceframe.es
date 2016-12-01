@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="ffmpeg.js"></script>
+    <script>
+      const ffmpeg = new ffmpegEncoder();
+      let fileInput;
+
+      let loadFile = function(file) {
+        return new Promise(function(resolve, reject) {
+          const fileReader = new FileReader();
+          fileReader.onload = function(e) {
+            resolve(this.result);
+          };
+          fileReader.readAsArrayBuffer(file);
+        });
+      };
+
+      const backgroundImageRequest = fetch('/assets/n6-background.mp4');
+
+      const start = function(file) {
+        ffmpeg.ready.then(function() {
+          return loadFile(file);
+        })
+        .then(function(arrayBuffer) {
+          // We have the file that the user has input, now load the
+          backgroundImageRequest.then(function(response) {
+            return response.arrayBuffer();
+          })
+          .then(function(responsebuffer) {
+            ffmpeg.run([
+              {name: 'n6-background.png', data: responsebuffer},
+              {name: file.name, data: arrayBuffer}
+              ]
+            );
+          });
+        });
+      }
+
+
+      onload = function() {
+        fileInput = document.getElementById("videoFile");
+        fileInput.onchange = function(e) {
+          start(e.target.files[0]);
+        };
+      };
+
+      ffmpeg.videoReady.then(function(data) {
+        var buffer = data.MEMFS[0].data;
+        download(new Blob( [ buffer ], { type: "video/mp4" } ));
+      });
+
+      function download(blob) {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'test.mp4';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+      }
+
+      ondragover = function(e) {
+        if (e.preventDefault) {
+          e.preventDefault(); // Necessary. Allows us to drop.
+        }
+
+        e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+        return false;
+      }
+
+      const outputBuffer = new ArrayBuffer();
+
+      ondrop = function(e) {
+        if (e.stopPropagation) {
+          e.stopPropagation(); // stops the browser from redirecting.
+        }
+
+        start(e.dataTransfer.files[0]);
+
+        return false;
+      };
+
+
+    </script>
+  </head>
+
+  <body draggable>
+    <label for="videoFile">Select or drop a video file</label>
+    <input type="file" name="videoFile" id="videoFile" accept="video/*">
+
+  </body>
+</html>
