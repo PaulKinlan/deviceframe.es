@@ -70,12 +70,25 @@
         }
 
         if(e.dataTransfer.items[0].type.indexOf('video/') != 0) {
+          document.body.classList.add('badfile');
           return false;
         }
+
+        document.body.classList.add('goodfile');
 
         e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
         return false;
+      }
+
+      ondragleave = function() {
+        document.body.classList.remove('goodfile');
+        document.body.classList.remove('badfile');
+      }
+
+      ondragend= function() {
+        document.body.classList.remove('goodfile');
+        document.body.classList.remove('badfile');
       }
 
       const outputBuffer = new ArrayBuffer();
@@ -84,6 +97,10 @@
         if (e.stopPropagation) {
           e.stopPropagation(); // stops the browser from redirecting.
         }
+
+        document.body.classList.remove('badfile');
+        document.body.classList.remove('goodfile');
+
 
         if(e.dataTransfer.items[0].type.indexOf('video/') != 0) {
           return false;
