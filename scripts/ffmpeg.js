@@ -48,13 +48,12 @@ let ffmpegEncoder = function(encoderArgs, files) {
       globalResolve();
       break;
     case "stdout":
+      if(this.stdout) this.stdout(msg);
       stdout += msg.data + "\n";
       break;
     case "stderr":
+      if(this.stderr) this.stderr(msg);
       stderr += msg.data + "\n";
-      break;
-    case "exit":
-      console.log("exit");
       break;
     case "done":
       videoResolve(msg.data);
@@ -67,5 +66,5 @@ let ffmpegEncoder = function(encoderArgs, files) {
       worker.terminate();
       break;
     }
-  };
+  }.bind(this);
 };
