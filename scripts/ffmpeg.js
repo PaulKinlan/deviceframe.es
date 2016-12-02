@@ -23,15 +23,9 @@ let ffmpegEncoder = function(encoderArgs, files) {
                 '-filter_complex', '[1:v]scale=480:-1[scaled_overlay],[0:v][scaled_overlay]overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h)/2',
                 'output.mp4'
               ]);
-
-    const maxheap = window.performance.memory.jsHeapSizeLimit / 1024 / 1024;
+ 
     const idealheap = 1024 * 1024 * 1024;
-    let targetheap = idealheap;
-
-    if(maxheap - idealheap < 256) {
-      targetheap = maxheap - 256;
-    }
-
+  
     worker.postMessage({
         type: "run",
         arguments: args,
