@@ -4,7 +4,7 @@
   "start_url": "./index.html",
   "icons": [
     {
-      "src": "./images/assets/icons/phone-192.png",
+      "src": "./assets/icons/phone-192.png",
       "type": "image/png",
       "sizes": "192x192"
     }

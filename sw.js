@@ -17,8 +17,6 @@
  *
  */
 
-
-
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open('framer').then(cache => {
@@ -33,4 +31,16 @@ self.addEventListener('install', e => {
       .then(() => self.skipWaiting());
     })
   )
+});
+
+self.addEventListener('activate',  event => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
 });
