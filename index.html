@@ -1,8 +1,10 @@
 <html>
   <head>
     <link rel="stylesheet" href="./css/main.css">
-    <script src="./ffmpeg.js"></script>
+    <script src="./scripts/ffmpeg.js"></script>
     <script>
+      navigator.serviceWorker.register('./sw.js');
+
       const ffmpeg = new ffmpegEncoder();
       let fileInput;
 
