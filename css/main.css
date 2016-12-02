@@ -65,6 +65,14 @@ body.working #output {
   display: flex;
 }
 
+body.working label[for=videoFile] {
+  display: none;
+}
+
+body.working #videoFile {
+  display: none;
+}
+
 #output {
   display: none;
   position: relative;
