@@ -14,7 +14,7 @@ body {
   align-items: center;
   justify-content: center;
   background-image: radial-gradient(circle at 50% 20%, #FF9800 0%, #FF5722 100%);
-  padding: 16px;
+  padding: 0 16px;
   color: white;
   font-size: 3em;
   font-family: Arial, Helvetica, sans-serif;
