@@ -19,6 +19,11 @@
       const backgroundImageRequest = fetch('./assets/n6-background.mp4');
 
       const start = function(file) {
+        document.body.classList.add('working');
+        ffmpeg.videoReady.then(function() {
+          document.body.classList.remove('working');
+        });
+
         ffmpeg.ready.then(function() {
           return loadFile(file);
         })
@@ -123,6 +128,6 @@
     <p id="loading">Loading the system... wait one moment</p>
     <label for="videoFile">Select or drop a video file</label>
     <input type="file" name="videoFile" id="videoFile" accept="video/*">
-
+    <div id="working">Encoding video. It may be some time.</div>
   </body>
 </html>
