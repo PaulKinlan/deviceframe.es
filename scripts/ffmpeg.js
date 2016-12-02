@@ -24,10 +24,18 @@ let ffmpegEncoder = function(encoderArgs, files) {
                 'output.mp4'
               ]);
 
+    const maxheap = window.performance.memory.jsHeapSizeLimit / 1024 / 1024;
+    const idealheap = 1024 * 1024 * 1024;
+    let targetheap = idealheap;
+
+    if(maxheap - idealheap < 256) {
+      targetheap = maxheap - 256;
+    }
+
     worker.postMessage({
         type: "run",
         arguments: args,
-        TOTAL_MEMORY: 1024 * 1024 * 1024,
+        TOTAL_MEMORY: idealheap,
         MEMFS: files
       });
   };
