@@ -4,7 +4,12 @@
     <meta name="theme-color" content="#FF9800">
     <script src="./scripts/ffmpeg.js"></script>
     <script>
-      navigator.serviceWorker.register('./sw.js');
+      if(navigator.serviceWorker) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => {
+            console.log('installed');
+          })
+      }
 
       const ffmpeg = new ffmpegEncoder();
       let fileInput;
