@@ -23,12 +23,12 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open('framer').then(cache => {
       return cache.addAll([
-        '/index.html',
-        '/css/main.css',
-        '/scripts/ffmpeg.js',
-        '/scripts/ffmpeg-worker-mp4.js',
-        '/assets/n6-background.png',
-        '/assets/n6-background.mp4'
+        './index.html',
+        './css/main.css',
+        './scripts/ffmpeg.js',
+        './scripts/ffmpeg-worker-mp4.js',
+        './assets/n6-background.png',
+        './assets/n6-background.mp4'
       ])
       .then(() => self.skipWaiting());
     })
