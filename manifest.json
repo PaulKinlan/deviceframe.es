@@ -1,5 +1,17 @@
 {
   "name": "Device Framer",
   "short_name": "Device Framer",
-  "start_url": "./index.html"
+  "start_url": "./index.html",
+  "icons": [
+    {
+      "src": "./images/assets/icons/phone-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FF9800",
+  "theme_color": "#FF9800"
 }
