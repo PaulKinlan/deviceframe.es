@@ -44,6 +44,7 @@
 
         ffmpeg.stderr = function(msg) {
           logEl.innerText += msg.data + "\n";
+          logEl.scrollTop = logEl.scrollHeight;
         };
 
         ffmpeg.ready.then(function() {

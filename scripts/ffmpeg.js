@@ -48,7 +48,7 @@ let ffmpegEncoder = function(encoderArgs, files) {
       globalResolve();
       break;
     case "stdout":
-      if(this.stdout) this.stdout(msg);
+      if(this.stderr) this.stderr(msg);
       stdout += msg.data + "\n";
       break;
     case "stderr":
@@ -57,13 +57,13 @@ let ffmpegEncoder = function(encoderArgs, files) {
       break;
     case "done":
       videoResolve(msg.data);
+      worker.terminate();
       console.log("done");
       break;
     case "exit":
       console.log("Process exited with code " + msg.data);
       console.log(stderr);
       console.log(stdout);
-      worker.terminate();
       break;
     }
   }.bind(this);
