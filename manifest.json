@@ -1,6 +1,7 @@
 {
   "name": "Device Framer",
   "short_name": "Device Framer",
+  "description": "Accepts an Android Screen recording and will put an Android Device Frame around it.",
   "start_url": "./index.html",
   "icons": [
     {
