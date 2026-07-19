@@ -1,192 +1,64 @@
-<html>
-  <head>
-    <title>Android Device Framer</title>
-    <meta name="description" content="Accepts an Android Screen recording and will put an Android Device Frame around it.">
-    <meta name="viewport" content="width=device-width">
-    <meta name="twitter:creator" content="@Paul_Kinlan">
-    <script type="application/ld+json">
-      {
-        "@context": "http://schema.org",
-        "@type": "Person",
-        "name": "Paul Kinlan",
-        "url": "https://paul.kinlan.me/",
-        "sameAs": [
-          "https://twitter.com/paul_kinlan",
-          "https://www.instagram.com/paul_kinlan/",
-          "https://www.linkedin.com/in/paulkinlan",
-          "https://plus.google.com/+paulkinlan",
-          "https://github.com/paulkinlan"
-        ]
-      }
-    </script>
-    <link rel="stylesheet" href="./css/main.css">
-    <meta name="theme-color" content="#FF9800">
-    <link rel="manifest" href="./manifest.json">
-    <script src="./scripts/ffmpeg.js"></script>
-    <script>
-      if(navigator.serviceWorker) {
-        navigator.serviceWorker.register('./sw.js')
-          .then(() => {
-            console.log('installed');
-          })
-      }
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Device Frames — frame screenshots and screen recordings</title>
+  <meta name="description" content="Put a screenshot or screen recording inside a clean device frame, then export it locally as PNG or WebM.">
+  <meta name="theme-color" content="#f4f0e8">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./css/main.css">
+  <script type="module" src="./scripts/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#studio">Skip to studio</a>
+  <header class="site-header">
+    <a class="brand" href="./">Device Frames<span aria-hidden="true">↗</span></a>
+    <p>Made locally in your browser</p>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="title">
+      <p class="eyebrow">Screenshots deserve context</p>
+      <h1 id="title">Give your work<br>a proper frame.</h1>
+      <p>Drop in a screenshot or screen recording. Choose a device, tune the presentation, and export a polished asset without uploading your file.</p>
+    </section>
 
-      const ffmpeg = new ffmpegEncoder();
-      let fileInput;
+    <section id="studio" class="studio" aria-labelledby="studio-title">
+      <div class="section-heading"><div><p class="step">01 · Source</p><h2 id="studio-title">Add your screen</h2></div><p>Images export as PNG. Videos export as WebM in real time.</p></div>
+      <label id="drop-zone" class="drop-zone" for="media-file">
+        <span class="plus" aria-hidden="true">＋</span><strong>Drop an image or video</strong><span>PNG, JPEG, WebP, MP4, WebM, or MOV</span><span class="file-button">Choose file</span>
+        <input id="media-file" type="file" accept="image/*,video/*">
+      </label>
+      <p id="error" class="error" role="alert" hidden></p>
 
-      let loadFile = function(file) {
-        return new Promise(function(resolve, reject) {
-          const fileReader = new FileReader();
-          fileReader.onload = function(e) {
-            resolve(this.result);
-          };
-          fileReader.readAsArrayBuffer(file);
-        });
-      };
+      <div id="workspace" class="workspace" hidden>
+        <section class="canvas-panel" aria-labelledby="preview-title">
+          <div class="panel-heading"><div><p class="step">02 · Preview</p><h2 id="preview-title">Your framed asset</h2></div><span id="media-details"></span></div>
+          <div id="stage" class="stage phone portrait">
+            <div class="device"><div class="camera" aria-hidden="true"></div><div class="speaker" aria-hidden="true"></div><div class="screen"><img id="image-preview" alt="Uploaded content preview" hidden><video id="video-preview" controls playsinline hidden></video></div><div class="home" aria-hidden="true"></div></div>
+          </div>
+          <p class="preview-note">Preview represents the exported composition. The export uses a high-resolution canvas.</p>
+        </section>
 
-      const backgroundImageRequest = fetch('./assets/n6-background.mp4');
-
-      const start = function(file) {
-        document.body.classList.add('working');
-        let urlToVideo = URL.createObjectURL(file);
-        let inputVideo = document.getElementById('inputVideo');
-
-        inputVideo.src = urlToVideo;
-        
-
-        ffmpeg.videoReady.then(function() {
-          // the video has completed processing
-          document.body.classList.remove('working');
-        });
-
-        const logEl = document.getElementById('log');
-
-        ffmpeg.stderr = function(msg) {
-          logEl.innerText += msg.data + "\n";
-          logEl.scrollTop = logEl.scrollHeight;
-        };
-
-        ffmpeg.ready.then(function() {
-          //the framework is ready
-          return loadFile(file);
-        })
-        .then(function(arrayBuffer) {
-          // We have the file that the user has input, now load the
-          backgroundImageRequest.then(function(response) {
-            return response.arrayBuffer();
-          })
-          .then(function(responsebuffer) {
-            ffmpeg.run([
-              {name: 'n6-background.mp4', data: responsebuffer},
-              {name: file.name, data: arrayBuffer}
-              ]
-            );
-          });
-        });
-      }
-
-      onload = function() {
-
-        ffmpeg.ready.then(function() {
-          document.body.classList.remove('loading');
-        });
-
-        fileInput = document.getElementById("videoFile");
-        fileInput.onchange = function(e) {
-          start(e.target.files[0]);
-        };
-      };
-
-      ffmpeg.videoReady.then(function(data) {
-        var buffer = data.MEMFS[0].data;
-        download(new Blob( [ buffer ], { type: "video/mp4" } ));
-      });
-
-      function download(blob) {
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'test.mp4';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 100);
-      }
-
-      ondragover = function(e) {
-        if (e.preventDefault) {
-          e.preventDefault(); // Necessary. Allows us to drop.
-        }
-
-        if(e.dataTransfer.items[0].type.indexOf('video/') != 0 
-           && e.dataTransfer.files[0].type.indexOf('video/') !=0) {
-          document.body.classList.add('badfile');
-          return false;
-        }
-
-        document.body.classList.add('goodfile');
-
-        e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-
-        return false;
-      }
-
-      ondragleave = function() {
-        document.body.classList.remove('goodfile');
-        document.body.classList.remove('badfile');
-      }
-
-      ondragend= function() {
-        document.body.classList.remove('goodfile');
-        document.body.classList.remove('badfile');
-      }
-
-      const outputBuffer = new ArrayBuffer();
-
-      ondrop = function(e) {
-        if (e.stopPropagation) {
-          e.stopPropagation(); // stops the browser from redirecting.
-        }
-
-        document.body.classList.remove('badfile');
-        document.body.classList.remove('goodfile');
-
-        if(e.dataTransfer.items[0].type.indexOf('video/') != 0) {
-          return false;
-        }
-
-        start(e.dataTransfer.files[0]);
-
-        return false;
-      };
-    </script>
-  </head>
-
-  <body draggable class="loading">
-    <p id="loading">Loading the system... wait one moment</p>
-    <label for="videoFile">Select or drop a video file</label>
-    <input type="file" name="videoFile" id="videoFile" accept="video/*">
-    <div id="working">Encoding video. It may be some time.</div>
-    <div id="output">
-      <div id="preview">
-        <video id="inputVideo"></video>
+        <aside class="control-panel" aria-labelledby="controls-title">
+          <p class="step">03 · Style</p><h2 id="controls-title">Frame settings</h2>
+          <fieldset><legend>Frame</legend><label><input type="radio" name="frame" value="phone" checked> Phone</label><label><input type="radio" name="frame" value="tablet"> Tablet</label><label><input type="radio" name="frame" value="browser"> Browser</label></fieldset>
+          <fieldset id="orientation-group"><legend>Orientation</legend><label><input type="radio" name="orientation" value="portrait" checked> Portrait</label><label><input type="radio" name="orientation" value="landscape"> Landscape</label></fieldset>
+          <label class="select-label" for="fit">Screen fit<select id="fit"><option value="contain">Fit entire screen</option><option value="cover">Fill and crop</option></select></label>
+          <label class="color-label" for="background">Background<input id="background" type="color" value="#e8e0d3"><span id="color-value">#e8e0d3</span></label>
+          <div class="actions"><button id="export" class="primary-button" type="button">Export PNG</button><button id="replace" class="secondary-button" type="button">Replace file</button></div>
+          <p id="export-note" class="note">Images render immediately at high resolution.</p>
+        </aside>
       </div>
-      <div id="outputlog">
-        <pre id="log"></pre>
-      </div>
-    </div>
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-88398808-1', 'auto');
-  ga('send', 'pageview');
+      <section id="progress-panel" class="progress-panel" aria-labelledby="progress-title" hidden><p class="step">04 · Export</p><h2 id="progress-title">Rendering every frame</h2><p id="progress-status" aria-live="polite"></p><progress id="progress" value="0" max="100">0%</progress><button id="cancel" class="secondary-button" type="button">Cancel</button></section>
+      <section id="result" class="result" aria-labelledby="result-title" hidden><div class="panel-heading"><div><p class="step">Done</p><h2 id="result-title">Ready to share</h2></div><span id="result-details"></span></div><img id="image-result" alt="Exported device frame" hidden><video id="video-result" controls playsinline hidden></video><div class="actions"><a id="download" class="primary-button">Download</a><button id="edit-again" class="secondary-button" type="button">Keep editing</button></div></section>
+      <canvas id="render-canvas" hidden aria-hidden="true"></canvas>
+    </section>
 
-</script>
-  </body>
+    <section class="privacy" aria-labelledby="privacy-title"><p class="eyebrow">Local-first by default</p><h2 id="privacy-title">Your screen stays yours.</h2><p>Files are decoded, composed, and exported in this browser tab. Nothing is sent to a server.</p></section>
+  </main>
+  <footer><p>Built by <a href="https://paul.kinlan.me/">Paul Kinlan</a>. <a href="https://github.com/PaulKinlan/deviceframe.es">View source</a>.</p></footer>
+</body>
 </html>
