@@ -43,9 +43,11 @@
 
         <aside class="control-panel" aria-labelledby="controls-title">
           <p class="step">03 · Style</p><h2 id="controls-title">Frame settings</h2>
-          <fieldset><legend>Frame</legend><label><input type="radio" name="frame" value="phone" checked> Phone</label><label><input type="radio" name="frame" value="tablet"> Tablet</label><label><input type="radio" name="frame" value="browser"> Browser</label></fieldset>
-          <fieldset id="orientation-group"><legend>Orientation</legend><label><input type="radio" name="orientation" value="portrait" checked> Portrait</label><label><input type="radio" name="orientation" value="landscape"> Landscape</label></fieldset>
+          <label class="select-label" for="device-profile">Device<select id="device-profile"><option value="pixel-10-pro">Pixel 10 Pro</option><option value="iphone-16-pro">iPhone 16 Pro</option><option value="galaxy-s25-ultra">Galaxy S25 Ultra</option><option value="pixel-tablet">Pixel Tablet</option><option value="browser">Desktop browser</option><option value="generic-landscape">Generic landscape phone</option></select></label>
           <label class="select-label" for="fit">Screen fit<select id="fit"><option value="contain">Fit entire screen</option><option value="cover">Fill and crop</option></select></label>
+          <p id="aspect-note" class="aspect-note" role="status" aria-live="polite"></p>
+          <label class="check-label"><input id="glass" type="checkbox" checked> Glass reflection</label>
+          <label class="check-label"><input id="shadow" type="checkbox" checked> Device shadow</label>
           <label class="color-label" for="background">Background<input id="background" type="color" value="#e8e0d3"><span id="color-value">#e8e0d3</span></label>
           <div class="actions"><button id="export" class="primary-button" type="button">Export PNG</button><button id="replace" class="secondary-button" type="button">Replace file</button></div>
           <p id="export-note" class="note">Images render immediately at high resolution.</p>
